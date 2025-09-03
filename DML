@@ -1,0 +1,80 @@
+Example Using DML
+
+
+Use ITSE2333pbeFA24;
+/* 1. Write an SQL query that uses a subquery to list products from the
+Product Table that have a greater
+than average list price*/
+SELECT *
+FROM clittlesfa24.Products
+WHERE ListPrice >
+( SELECT AVG(ListPrice)
+FROM clittlesfa24.Products);
+/* 2. Create a SELECT statement with a NOT EXISTS subquery to list
+Customer information from the customers table
+that have no orders in the Orders Table.*/
+SELECT *
+FROM clittlesfa24.Customers
+WHERE NOT EXISTS
+(SELECT NULL
+FROM clittlesfa24.Orders
+WHERE Orders.CustomerID = Customers.CustomerID);
+/*3. Create a select query that lists CustomerID , Last Name , OrderID and
+Card Type for customers that have
+Orders that used a Visa Card*/
+SELECT LastName , CardType , OrderID
+FROM clittlesfa24.Customers JOIN clittlesfa24.Orders
+ON Customers.CustomerID = Orders.CustomerID
+WHERE CardType = 'Visa';
+/*4. Create a SELECT query that lists customerID , Customer Last name ,
+OrderID , Order Date for order that were
+placed after the single order placed by the customer with CustomerID 22.
+USe a subquery*/
+SELECT LastName , OrderID , OrderDate
+FROM clittlesfa24.Customers JOIN clittlesfa24.Orders
+ON Customers.CustomerID = Orders.CustomerID
+WHERE OrderDate >(
+SELECT OrderDate
+FROM clittlesfa24.Orders
+WHERE CustomerID = '22' )
+/*PREP*/
+USE ITSE2333pbeFA24;
+SELECT *
+INTO clittlesfa24.ProductsCopy
+FROM clittlesfa24.Products;
+/*PREP*/
+USE ITSE2333pbeFA24;
+SELECT *
+INTO clittlesfa24.CategoriesCopy
+FROM clittlesfa24.Categories;
+/*5. Insert into CategoriesCopy Table a new category names 'Horns'*/
+INSERT INTO clittlesfa24.CategoriesCopy
+VALUES ('Horns');
+/*6.Insert into the ProductsCopy table a new product with the data for a
+saxophone. You can look up info for
+saxophone online at a website like GuitarCenter.com. Use the CategoryID for
+horns and todays date and time.*/
+INSERT INTO clittlesfa24.ProductsCopy
+(CategoryID , ProductCode , ProductName , Description , ListPrice ,
+DiscountPercent , DateAdded)
+Values
+( 5 , 'yas' , 'Yamaha YAS-26', 'A redesigned neck receiver promotes a
+quick response and ease of play while also increasing the durability of the
+mechanism' , 3000.00 , 2550.00 , '2024-10-21 09:45:30.000');
+/*7.Update the ProductsCopy table to change the price of the Fender
+Stratocaster from $699 to $899.*/
+UPDATE clittlesfa24.ProductsCopy
+SET ListPrice = 899.00
+WHERE ProductName = 'Fender Stratocaster'
+/* 8. Delete the saxophone record you added in query 6.*/
+DELETE clittlesfa24.ProductsCopy
+WHERE ProductName LIKE '%Yas-26%';
+/*9. Update the ProductsCopy table to add 5 dollars to the discount for all
+drums.*/
+UPDATE clittlesfa24.ProductsCopy
+SET ListPrice = ListPrice + 5.00
+WHERE ProductName LIKE '%Drum%' ;
+/*10. Delete all records with a list price less than $500 from the ProductsCopy
+table*/
+DELETE clittlesfa24.ProductsCopy
+WHERE ListPrice < '500'
